@@ -4,8 +4,7 @@ import yahoo_fin.stock_info as si
 import requests
 import snscrape.modules.twitter as sntwitter
 
-
-def extractHistoricalPrice(ticker_list, start_date, end_date, interval='1d', data_path):
+def extractHistoricalPrice(data_path, ticker_list, start_date, end_date, interval='1d'):
     historical_data = {}
     for ticker in ticker_list:
         historical_data[ticker] = si.get_data(ticker, start_date=start_date, end_date=end_date, interval=interval)
@@ -13,7 +12,7 @@ def extractHistoricalPrice(ticker_list, start_date, end_date, interval='1d', dat
 
     return None
 
-def extractTickerNews(ticker_list, start_date, end_date, n_news, eod_api_key, offset = 0, data_path):
+def extractTickerNews(data_path, ticker_list, start_date, end_date, n_news, eod_api_key, offset = 0):
     for ticker in ticker_list:
         url = f'https://eodhistoricaldata.com/api/news?api_token={eod_api_key}&s={ticker}&limit={n_news}&offset={offset}&from={start_date}&to={end_date}'
         news_json = requests.get(url).json()
@@ -28,8 +27,7 @@ def extractTickerNews(ticker_list, start_date, end_date, n_news, eod_api_key, of
 
     return None
 
-
-def extractTweets(query, max_nb_tweets, data_path):
+def extractTweets(data_path, query, max_nb_tweets):
     # from advanced search, copy the query in the search bar
     # query = "(amazon OR google OR meta) min_replies:50 min_faves:100 min_retweets:200 lang:en until:2022-11-20 since:2020-01-01"
     tweets = []
@@ -43,3 +41,12 @@ def extractTweets(query, max_nb_tweets, data_path):
     df.to_csv(data_path + 'tweets.csv')
 
     return None
+
+
+if __name__ == '__main__':
+    extractHistoricalPrice(data_path = '/Users/chiuchristine/Documents/dev_projects/data/',
+                           ticker_list = ['aapl','googl','hd','meta'], 
+                           start_date = '2012-01-01',
+                           end_date = '2022-11-30',
+                           interval='1d'
+                           )
